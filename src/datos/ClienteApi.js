@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const baseLink = process.env.REACT_APP_BE_LINK || "http://localhost:8080";
+const baseLink = "https://integrador-backend-nine.vercel.app";
 
 export const loginUsuario = async (email, contrasenia) => {
     try {
