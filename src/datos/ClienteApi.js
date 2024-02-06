@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
 const baseLink = "https://integrador-backend-nine.vercel.app";
 
 export const loginUsuario = async (email, contrasenia) => {
