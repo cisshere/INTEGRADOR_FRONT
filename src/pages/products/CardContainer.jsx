@@ -11,6 +11,8 @@ import {
 import Modal from "react-modal";
 import { SlClose } from "react-icons/sl";
 import { ButtonModal } from "../../components/navbar/modal/ModalStyled";
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 const customStyles = {
   content: {
@@ -60,7 +62,20 @@ const CardProducto = (producto) => {
       <SlClose onClick={closeModal} size={28} style={{ cursor: "pointer" }} />
       <h2>¿Desea agregar el producto al carrito?</h2>
       <div style={{ display: "flex", gap: "2rem" }}>
-        <ButtonModal onClick={() => {dispatch(agregarProducto(producto)); closeModal(); } }>Aceptar</ButtonModal>
+        <ButtonModal onClick={() => {dispatch(agregarProducto(producto)); closeModal();  
+      Toastify({
+        text: "Se agrego un producto al carrito",
+        className: "info",
+        duration: 1500,
+        gravity: "bottom",
+        position: "right",
+        close: true,
+        style: {
+          background: "#4CD35A",
+        },
+      }).showToast();
+      }
+      }>Aceptar</ButtonModal>
         <ButtonModal onClick={closeModal}>Cancelar</ButtonModal>
       </div>
     </Modal>

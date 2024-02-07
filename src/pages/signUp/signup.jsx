@@ -12,10 +12,12 @@ import {
   NavHome,
 } from "../login/LoginStyled";
 import * as Yup from "yup";
-import { registrarUsuario} from "../../datos/ClienteApi.js";
-import {setToken} from "../../redux/auth/authActions.jsx";
-import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { registrarUsuario } from "../../datos/ClienteApi.js";
+import { setToken } from "../../redux/auth/authActions.jsx";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 const validationSchema = Yup.object({
   nombre: Yup.string().trim().required("Este campo es requerido"),
@@ -47,12 +49,28 @@ const Signup = () => {
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             try {
-              const token = await registrarUsuario(values.email, values.contrasenia, values.nombre, values.apellido);
-              dispatch(setToken(token))
+              const token = await registrarUsuario(
+                values.email,
+                values.contrasenia,
+                values.nombre,
+                values.apellido
+              );
+              dispatch(setToken(token));
               resetForm();
               navigate("/");
+              Toastify({
+                text: "Se ha registrado exitosamente.",
+                className: "info",
+                duration: 1500,
+                gravity: "bottom",
+                position: "right",
+                close: true,
+                style: {
+                  background: "#4CD35A",
+                },
+              }).showToast();
             } catch (e) {
-              console.log(e)
+              console.log(e);
             }
             resetForm();
           }}

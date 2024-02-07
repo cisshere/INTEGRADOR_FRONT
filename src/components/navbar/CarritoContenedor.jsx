@@ -7,6 +7,8 @@ import {
   borrarProducto,
 } from "../../redux/carrito/carritoActions";
 import { CambiarCantidad, DatosProductCarrito, ProdImgCarrito, ProductoCarrito, ButtonCambiarCantidad } from "./CarritoStyles";
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
  const CarritoContainer = (producto) => {
 
@@ -32,7 +34,20 @@ import { CambiarCantidad, DatosProductCarrito, ProdImgCarrito, ProductoCarrito, 
       <div>
         <button>
           <FaRegTrashAlt
-            onClick={() => dispatchRedux(borrarProducto(producto))}
+            onClick={() => {dispatchRedux(borrarProducto(producto)) 
+              Toastify({
+                text: "Se saco el producto de la lista",
+                className: "info",
+                duration: 1500,
+                gravity: "bottom",
+                position: "right",
+                close: true,
+                style: {
+                  background: "#D63E2C",
+                },
+              }).showToast();
+            }
+            }
           />
         </button>
       </div>

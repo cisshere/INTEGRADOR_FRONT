@@ -16,6 +16,8 @@ import {loginUsuario} from "../../datos/ClienteApi.js";
 import {useNavigate} from "react-router-dom";
 import {setToken} from "../../redux/auth/authActions.jsx";
 import {useDispatch} from "react-redux";
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 const validationSchema = Yup.object({
   email: Yup.string().trim().required("Este campo es requerido"),
@@ -43,6 +45,19 @@ const Login = () => {
               dispatch(setToken(token))
               resetForm();
               navigate("/");
+
+              Toastify({
+                text: "Se ha logeado exitosamente.",
+                className: "info",
+                duration: 1500,
+                gravity: "bottom",
+                position: "right",
+                close: true,
+                style: {
+                  background: "#4CD35A",
+                },
+              }).showToast();
+
             } catch (e) {
               console.log(e)
             }

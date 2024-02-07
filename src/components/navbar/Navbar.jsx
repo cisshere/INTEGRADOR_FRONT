@@ -15,7 +15,7 @@ import {
   ContenedorCarrito,
 } from "./NavbarStyles";
 import { ButtonCart, BelowCarrito, LinkCarrito } from "./CarritoStyles";
-import {BiSolidUserRectangle} from "react-icons/bi";
+import { BiSolidUserRectangle } from "react-icons/bi";
 import { FaShoppingCart } from "react-icons/fa";
 import { SlMenu } from "react-icons/sl";
 import { Context } from "./MenuContext";
@@ -25,11 +25,13 @@ import { useDispatch } from "react-redux";
 import { borrarCarrito } from "../../redux/carrito/carritoActions";
 import CarritoContainer from "./CarritoContenedor";
 import { ModalCarrito } from "./modal/ModalReact";
-import {estaLogueado, getToken} from "../../redux/auth/authSelectors.jsx";
-import {PiSignOutBold} from "react-icons/pi";
-import {setToken} from "../../redux/auth/authActions.jsx";
-import {useNavigate} from "react-router-dom";
-import {guardarCompra} from "../../datos/ClienteApi.js";
+import { estaLogueado, getToken } from "../../redux/auth/authSelectors.jsx";
+import { PiSignOutBold } from "react-icons/pi";
+import { setToken } from "../../redux/auth/authActions.jsx";
+import { useNavigate } from "react-router-dom";
+import { guardarCompra } from "../../datos/ClienteApi.js";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 const Navbar = () => {
   const { state, dispatch } = useContext(Context);
@@ -41,21 +43,20 @@ const Navbar = () => {
   const [carritoComprado, setCarritoComprado] = useState(false);
   const token = getToken();
 
-  const comprarCarrito = () =>{
-    if(mostrarLogin){
-        alert("Necesita loguearse para poder comprar");
-        navigate("/login");
-    }else{
+  const comprarCarrito = () => {
+    if (mostrarLogin) {
+      alert("Necesita loguearse para poder comprar");
+      navigate("/login");
+    } else {
       setCarritoComprado(true);
       openModal();
     }
-  }
+  };
 
-  const borrarTodoCarrito = () =>{
+  const borrarTodoCarrito = () => {
     setCarritoComprado(false);
     openModal();
-
-  }
+  };
 
   const openModal = () => {
     setIsOpen(true);
@@ -66,7 +67,7 @@ const Navbar = () => {
   };
 
   const totalDeCompra = itemsCarrito.reduce((acc, producto) => {
-    return (acc += producto.precio * producto.cantidad)
+    return (acc += producto.precio * producto.cantidad);
   }, 0);
 
   return (
@@ -85,17 +86,37 @@ const Navbar = () => {
             </NavListPrincipal>
           </MenuStyled>
 
-          <NavItem to="/"> <LogoMarca src="./assets/img/logo.png" alt="logo" /></NavItem>
+          <NavItem to="/">
+            {" "}
+            <LogoMarca src="./assets/img/logo.png" alt="logo" />
+          </NavItem>
 
           <BtnNavbar>
-            {mostrarLogin ?
-                <LinkLogin to="/login">
-                    <BiSolidUserRectangle/>
-                </LinkLogin> :
-                <LinkLogin onClick={()=> dispatchRedux(setToken(undefined))}>
-                  <PiSignOutBold/>
-                </LinkLogin>
-            }
+            {mostrarLogin ? (
+              <LinkLogin to="/login">
+                <BiSolidUserRectangle />
+              </LinkLogin>
+            ) : (
+              <LinkLogin
+                onClick={() => {
+                  dispatchRedux(setToken(undefined));
+
+                  Toastify({
+                    text: "Se ha cerrado sesión",
+                    className: "info",
+                    duration: 1500,
+                    gravity: "bottom",
+                    position: "right",
+                    close: true,
+                    style: {
+                      background: "#4CD35A",
+                    },
+                  }).showToast();
+                }}
+              >
+                <PiSignOutBold />
+              </LinkLogin>
+            )}
             <ButtonCartLogo onClick={() => dispatch({ type: "toggle_cart" })}>
               <FaShoppingCart />
             </ButtonCartLogo>
@@ -119,9 +140,11 @@ const Navbar = () => {
                   <p style={{ border: "1px solid", margin: "0 4rem" }}>
                     Total $<span>{totalDeCompra.toLocaleString("es")}</span>
                   </p>
-                  <ButtonCart onClick={comprarCarrito} >Comprar</ButtonCart>
-                  <ButtonCart onClick={borrarTodoCarrito}>Borrar todo</ButtonCart>
-                  <LinkCarrito to="checkout" >Ir al carrito </LinkCarrito>
+                  <ButtonCart onClick={comprarCarrito}>Comprar</ButtonCart>
+                  <ButtonCart onClick={borrarTodoCarrito}>
+                    Borrar todo
+                  </ButtonCart>
+                  <LinkCarrito to="checkout">Ir al carrito </LinkCarrito>
                 </BelowCarrito>
               )}
             </Carrito>
@@ -130,17 +153,48 @@ const Navbar = () => {
       </HeaderContainerStyled>
 
       <ModalCarrito
-          modalIsOpen={modalIsOpen}
-          closeModal={closeModal}
-          aceptarClick={
-            carritoComprado ?
-                () =>{
-                  guardarCompra(itemsCarrito, token).then(()=>{
-                    dispatchRedux(borrarCarrito());
-                  })
-                } :
-                () =>{dispatchRedux(borrarCarrito())} }
-          mensaje={carritoComprado ? "¿Desea realizar la compra?" : "¿Desea borrar todo el carrito?"} />
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        aceptarClick={
+          carritoComprado
+            ? () => {
+                guardarCompra(itemsCarrito, token).then(() => {
+                  dispatchRedux(borrarCarrito());
+                });
+                Toastify({
+                  text: "Se realizó la compra exitosamente",
+                  className: "info",
+                  duration: 1500,
+                  gravity: "bottom",
+                  position: "right",
+                  close: true,
+                  style: {
+                    background: "#4CD35A",
+                  },
+                }).showToast();
+              }
+            : () => {
+                {dispatchRedux(borrarCarrito());
+                
+                  Toastify({
+                    text: "Se vació el carrito de compras",
+                    className: "info",
+                    duration: 1500,
+                    gravity: "bottom",
+                    position: "right",
+                    close: true,
+                    style: {
+                      background: "#4CD35A",
+                    },
+                  }).showToast();
+                }}
+        }
+        mensaje={
+          carritoComprado
+            ? "¿Desea realizar la compra?"
+            : "¿Desea borrar todo el carrito?"
+        }
+      />
     </>
   );
 };
