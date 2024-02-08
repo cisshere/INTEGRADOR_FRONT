@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Field, ErrorMessage } from "formik";
 import {
   LoginSection,
@@ -18,6 +18,7 @@ import {setToken} from "../../redux/auth/authActions.jsx";
 import {useDispatch} from "react-redux";
 import Toastify from 'toastify-js'
 import "toastify-js/src/toastify.css"
+import { estaLogueado } from "../../redux/auth/authSelectors.jsx";
 
 const validationSchema = Yup.object({
   email: Yup.string().trim().required("Este campo es requerido"),
@@ -27,6 +28,12 @@ const validationSchema = Yup.object({
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const redireccionarHome = estaLogueado();
+  useEffect(()=> {
+    if(redireccionarHome){
+      navigate("/")
+    }
+  },[])
 
   return (
     <LoginSection>

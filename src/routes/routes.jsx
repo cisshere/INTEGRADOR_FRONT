@@ -14,6 +14,9 @@ import Login from "../pages/login/Login";
 import Signup from "../pages/signUp/signup.jsx";
 
 const Routes = () => {
+
+
+
   return (
     <BrowserRouter>
       <Layout>
@@ -23,10 +26,12 @@ const Routes = () => {
           <Route path="beneficios" element={<Beneficios />} />
           <Route path="contacto" element={<Contacto />} />
           <Route path="checkout" element={<CarritoPage />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signIn" element={<Signup/> } />
 
-          <Route path="*" element={<h2>Error!</h2>} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup/> } />
+
+
+          <Route path="*" element={<h2 style={{ paddingTop: "15rem" }}>¡Error! La página no existe</h2>} />
         </ReactDomRoutes>
       </Layout>
     </BrowserRouter>
