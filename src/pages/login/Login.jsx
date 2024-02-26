@@ -102,7 +102,7 @@ const Login = () => {
 
         <a>¿Olvidaste tu contraseña?</a>
 
-        <NavItem to="/signIn">¿No tienes cuenta? Registrate</NavItem>
+        <NavItem to="/signUp">¿No tienes cuenta? Registrate</NavItem>
 
         <NavHome to="/">Volver al home</NavHome>
       </ContenedorLogin>
